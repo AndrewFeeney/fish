@@ -1,7 +1,8 @@
-import Coordinates from "./coordinates"
+import BoardCoordinates from "./board-coordinates"
 import Game from "./game"
+import Rod from "./rod"
 
-function drawLine(ctx: CanvasRenderingContext2D, origin: Coordinates, destination: Coordinates) {
+function drawLine(ctx: CanvasRenderingContext2D, origin: BoardCoordinates, destination: BoardCoordinates) {
     ctx.beginPath()
 
     // move the pen to the starting position for the line
@@ -12,6 +13,10 @@ function drawLine(ctx: CanvasRenderingContext2D, origin: Coordinates, destinatio
 
     // draw the line
     ctx.stroke()
+}
+
+function drawRod(ctx: CanvasRenderingContext2D, rod: Rod) {
+  drawLine(ctx, rod.anchorPoint, rod.tip())
 }
 
 export default class GameRenderer {
@@ -29,7 +34,11 @@ export default class GameRenderer {
     const gameBoardCanvas = document.getElementById('game-board') as HTMLCanvasElement
     const ctx = gameBoardCanvas.getContext('2d')
 
+    if (!ctx) {
+      return
+    }
+
     const rod = game.players[0].rod
-    drawLine(ctx!, rod.anchorPoint, rod.tip())
+    drawRod(ctx, rod)
   }
 }

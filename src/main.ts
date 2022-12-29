@@ -1,11 +1,10 @@
 import './style.css'
 import Game from './game'
-import GameRenderer from './game-renderer'
+import renderGame from './render-game'
 
-const gameRenderer = new GameRenderer()
 const game = new Game()
 const element = document.querySelector<HTMLDivElement>('#app')
-gameRenderer.render(element, game)
+renderGame(element, game)
 
 
 new Game()

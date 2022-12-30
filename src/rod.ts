@@ -1,9 +1,11 @@
 import { BoardCoordinates } from './board-coordinates'
+import Clock from './clock'
 import Drawable from './drawable'
-import Game from './game'
 import { drawLine } from './draw'
+import Game from './game'
+import Updatable from './updatable'
 
-export default class Rod implements Drawable {
+export default class Rod implements Drawable, Updatable {
   anchorPoint: BoardCoordinates
   length: number = 100
   swingWidth: number = 50
@@ -16,6 +18,10 @@ export default class Rod implements Drawable {
 
   tip(): BoardCoordinates {
     return { x: this.anchorPoint.x, y: this.anchorPoint.y + this.length } 
+  }
+
+  update(clock: Clock, game: Game) {
+
   }
 
   draw(ctx: CanvasRenderingContext2D, _game: Game) {

@@ -1,4 +1,5 @@
 import Game from "./game"
+import GameClock from "./game-clock"
 
 export default function renderGame(element: Element, game: Game) {
   element!.innerHTML = `
@@ -15,8 +16,17 @@ export default function renderGame(element: Element, game: Game) {
     return
   }
 
+  const clock = new GameClock()
 
-  game.drawables.forEach(function (drawable) {
-    drawable.draw(ctx, game)
-  })
+  const gameLoop = function () {
+    game.updatables.forEach(function (updatable) {
+      updatable.update(clock, game)
+    })
+
+    game.drawables.forEach(function (drawable) {
+      drawable.draw(ctx, game)
+    })
+  }
+
+  window.setInterval(gameLoop, 1000 / 60)
 }

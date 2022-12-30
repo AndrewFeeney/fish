@@ -1,32 +1,28 @@
-import Game from "./game"
-import GameClock from "./game-clock"
+import Game from './game'
+
+let canvas: HTMLCanvasElement
+let ctx: CanvasRenderingContext2D
 
 export default function renderGame(element: Element, game: Game) {
-  element!.innerHTML = `
-    <canvas
-      id="game-board"
-      width=${game.dimensions.width}
-      height=${game.dimensions.height}
-    ></canvas>
-  `
-  const gameBoardCanvas = document.getElementById('game-board') as HTMLCanvasElement
-  const ctx = gameBoardCanvas.getContext('2d')
+  if (!canvas) {
+    element!.innerHTML = `
+      <canvas
+        id="game-board"
+        width=${game.dimensions.width}
+        height=${game.dimensions.height}
+      ></canvas>
+    `
+    canvas = document.getElementById('game-board') as HTMLCanvasElement
+    ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+  }
 
   if (!ctx) {
     return
   }
 
-  const clock = new GameClock()
+  ctx.clearRect(0, 0, game.dimensions.width, game.dimensions.height)
 
-  const gameLoop = function () {
-    game.updatables.forEach(function (updatable) {
-      updatable.update(clock, game)
-    })
-
-    game.drawables.forEach(function (drawable) {
-      drawable.draw(ctx, game)
-    })
-  }
-
-  window.setInterval(gameLoop, 1000 / 60)
+  game.drawables.forEach(function (drawable) {
+    drawable.draw(ctx, game)
+  })
 }

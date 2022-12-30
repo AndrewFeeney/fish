@@ -32,15 +32,17 @@ export default class Game {
       }),
     ]
 
+    const fish = new Fish()
+
     this.drawables = [
       new Ocean(),
       this.players[0].rod,
-      new Fish(),
+      fish,
     ]
 
     this.updatables = [
       this.players[0].rod,
-      new Fish(),
+      fish
     ]
   }
 }

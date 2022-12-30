@@ -1,6 +1,9 @@
 import { BoardCoordinates } from './board-coordinates'
 import { Dimensions2D } from './dimensions-2d'
-import Rod from "./rod"
+import Drawable from './drawable'
+import Fish from './fish'
+import Ocean from './ocean'
+import Rod from './rod'
 
 class Player {
   rod: Rod
@@ -15,6 +18,7 @@ class Player {
 export default class Game {
   players: Array<Player>
   dimensions: Dimensions2D
+  drawables: Array<Drawable>
 
   constructor(dimensions: Dimensions2D) {
     this.dimensions = dimensions
@@ -23,6 +27,11 @@ export default class Game {
         x: dimensions.width / 2,
         y: 25,
       }),
+    ]
+    this.drawables = [
+      new Ocean(),
+      this.players[0].rod,
+      new Fish(),
     ]
   }
 }

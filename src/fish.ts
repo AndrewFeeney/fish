@@ -5,23 +5,29 @@ import Game from './game'
 
 export default class Fish implements Drawable {
   position: BoardCoordinates
-  radius = 50
+  radius: number
+  velocity: number
 
   constructor() {
+    this.radius = Math.round(Math.random() * 50)
+
+    this.velocity = Math.random() * 2 - 1
+
     this.position = {
-      x: 75,
-      y: 75,
+      x: Math.round(Math.random() * 500),
+      y: Math.round(Math.random() * 500 + 100),
     }
   }
 
   update(clock: Clock, game: Game) {
     this.position = {
-      x: this.position.x + clock.time() / 10000,
+      x: this.position.x + (clock.time() / 2500) * this.velocity,
       y: this.position.y
     }
   }
 
   draw(ctx: CanvasRenderingContext2D) {
+    ctx.fillStyle = "#990000";
     ctx.beginPath()
     ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
     ctx.fill()

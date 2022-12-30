@@ -32,17 +32,20 @@ export default class Game {
       }),
     ]
 
-    const fish = new Fish()
+    const fish: Array<Fish> = []
+
+    for (let i = 0; i < 10; i++) {
+      fish.push(new Fish())
+    }
 
     this.drawables = [
       new Ocean(),
+    ].concat(fish as Array<Drawable>).concat([
       this.players[0].rod,
-      fish,
-    ]
+    ])
 
-    this.updatables = [
+    this.updatables = (fish as Array<Updatable>).concat([
       this.players[0].rod,
-      fish
-    ]
+    ])
   }
 }

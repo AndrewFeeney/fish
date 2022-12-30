@@ -1,9 +1,8 @@
-import BoardCoordinates from "./board-coordinates"
+import { BoardCoordinates } from "./board-coordinates"
+import {Dimensions2D} from "./dimensions-2d"
 import Game from "./game"
 import Rod from "./rod"
 
-const width = 1080
-const height = 720
 
 function drawLine(ctx: CanvasRenderingContext2D, origin: BoardCoordinates, destination: BoardCoordinates) {
   ctx.beginPath()
@@ -22,12 +21,17 @@ function drawRod(ctx: CanvasRenderingContext2D, rod: Rod) {
   drawLine(ctx, rod.anchorPoint, rod.tip())
 }
 
+function drawOcean(ctx: CanvasRenderingContext2D, dimensions: Dimensions2D) {
+  ctx.fillStyle = "#006699";
+  ctx.fillRect(0, 50, dimensions.width, dimensions.height);
+}
+
 export default function renderGame(element: Element, game: Game) {
   element!.innerHTML = `
       <canvas
         id="game-board"
-        width=${width}
-        height=${height}
+        width=${game.dimensions.width}
+        height=${game.dimensions.height}
       ></canvas>
     `
 
@@ -38,6 +42,6 @@ export default function renderGame(element: Element, game: Game) {
     return
   }
 
-  const rod = game.players[0].rod
-  drawRod(ctx, rod)
+  drawOcean(ctx, game.dimensions)
+  drawRod(ctx, game.players[0].rod)
 }

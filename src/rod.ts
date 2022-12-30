@@ -6,8 +6,8 @@ export default class Rod {
   swingWidth: number = 50
   angle: number
 
-  constructor() {
-    this.anchorPoint = { x: 10, y: 10 }
+  constructor(initialAnchorPoint: BoardCoordinates = { x: 0, y: 0 }) {
+    this.anchorPoint = initialAnchorPoint 
     this.angle = 90
   }
 

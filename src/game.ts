@@ -2,7 +2,7 @@ import { BoardCoordinates } from './board-coordinates'
 import Clock from './clock'
 import { Dimensions2D } from './dimensions-2d'
 import { gameEventBus, EventBus, Event} from './events'
-import Fish from './fish'
+import { newFish, Fish } from './fish'
 import Ocean from './ocean'
 import Rod from './rod'
 
@@ -44,7 +44,7 @@ export default class Game {
 
     // Instantiate fish
     for (let i = 0; i < 10; i++) {
-      this.fish.push(new Fish(i))
+      this.fish.push(newFish(this, i))
     }
 
     // Instantiate ocean
@@ -69,7 +69,7 @@ export default class Game {
   private render() {
     this.ocean.draw(this.ctx, this)
     this.players.forEach(player => player.rod.draw(this.ctx, this))
-    this.fish.forEach(fish => fish.draw(this.ctx))
+    this.fish.forEach(fish => fish.draw(this.ctx, this))
   }
 
   private registerEventHandlers() {
@@ -77,6 +77,6 @@ export default class Game {
   }
 
   private respawnFish(fish: Fish) {
-    this.fish.splice(this.fish.findIndex(f => f.id === fish.id), 1, new Fish(fish.id))
+    this.fish.splice(this.fish.findIndex(f => f.id === fish.id), 1, newFish(this, fish.id))
   }
 }

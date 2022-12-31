@@ -1,10 +1,9 @@
 import { BoardCoordinates } from './board-coordinates'
+import Clock from './clock'
 import { Dimensions2D } from './dimensions-2d'
-import Drawable from './drawable'
 import Fish from './fish'
 import Ocean from './ocean'
 import Rod from './rod'
-import Updatable from './updatable'
 
 class Player {
   rod: Rod
@@ -17,13 +16,20 @@ class Player {
 }
 
 export default class Game {
-  players: Array<Player>
+  ctx: CanvasRenderingContext2D
   dimensions: Dimensions2D
-  drawables: Array<Drawable>
-  updatables: Array<Updatable>
+  clock: Clock
+  framesPerSecond: number
 
-  constructor(dimensions: Dimensions2D) {
+  players: Array<Player>
+  fish: Array<Fish>
+  ocean: Ocean
+
+  constructor(ctx: CanvasRenderingContext2D, dimensions: Dimensions2D, clock: Clock, framesPerSecond: number) {
+    this.ctx = ctx
     this.dimensions = dimensions
+    this.clock = clock
+    this.framesPerSecond = framesPerSecond
 
     this.players = [
       new Player({
@@ -38,14 +44,26 @@ export default class Game {
       fish.push(new Fish())
     }
 
-    this.drawables = [
-      new Ocean(),
-    ].concat(fish as Array<Drawable>).concat([
-      this.players[0].rod,
-    ])
+    this.fish = fish
+    this.ocean = new Ocean()
+  }
 
-    this.updatables = (fish as Array<Updatable>).concat([
-      this.players[0].rod,
-    ])
+  start() {
+    const loop = () => {
+      this.update()
+      this.render()
+    }
+
+    window.setInterval(loop, 1000 / this.framesPerSecond)
+  }
+
+  update() {
+    this.fish.forEach(fish => fish.update(this.clock, this))
+  }
+
+  render() {
+    this.ocean.draw(this.ctx, this)
+    this.players.forEach(player => player.rod.draw(this.ctx, this))
+    this.fish.forEach(fish => fish.draw(this.ctx))
   }
 }

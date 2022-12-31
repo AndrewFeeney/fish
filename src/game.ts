@@ -73,10 +73,10 @@ export default class Game {
   }
 
   private registerEventHandlers() {
-    this.eventBus.on(Event.FishOutOfBounds, (fish: Fish) => this.destroyFish(fish))
+    this.eventBus.on(Event.FishOutOfBounds, (fish: Fish) => this.respawnFish(fish))
   }
 
-  private destroyFish(fish: Fish) {
-    this.fish.splice(this.fish.findIndex(f => f.id === fish.id), 1)
+  private respawnFish(fish: Fish) {
+    this.fish.splice(this.fish.findIndex(f => f.id === fish.id), 1, new Fish(fish.id))
   }
 }

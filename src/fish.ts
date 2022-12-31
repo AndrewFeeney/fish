@@ -1,14 +1,17 @@
-import {BoardCoordinates} from './board-coordinates'
+import { BoardCoordinates } from './board-coordinates'
+import { Event } from './events'
 import Clock from './clock'
 import Drawable from './drawable'
 import Game from './game'
 
 export default class Fish implements Drawable {
+  id: number
   position: BoardCoordinates
   radius: number
   velocity: number
 
-  constructor() {
+  constructor(id: number) {
+    this.id = id
     this.radius = Math.round(Math.random() * 50)
 
     this.velocity = Math.random() * 2 - 1
@@ -23,6 +26,10 @@ export default class Fish implements Drawable {
     this.position = {
       x: this.position.x + (clock.time() / 2500) * this.velocity,
       y: this.position.y
+    }
+
+    if (this.position.x < 0 - this.radius) {
+      game.eventBus.emit(Event.FishOutOfBounds, this)
     }
   }
 

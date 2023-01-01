@@ -5,16 +5,25 @@ import Drawable from './drawable'
 import Game from './game'
 import Updatable from './updatable'
 
-function getColor(radius: number, maxRadius: number, height: number, maxHeight: number, velocity: number): string {
-  const redHex = Math.round((radius / maxRadius) * 256).toString(16)
-  const greenHex = Math.round((height / maxHeight) * 256).toString(16)
-  const blueHex = Math.round(Math.abs(velocity) * 256).toString(16)
+function addLeadingZero(hex: string) {
+  if (hex.length === 2) {
+    return hex
+  }
+
+  return `0${hex}`
+}
+
+export function getColor(radius: number, maxRadius: number, height: number, maxHeight: number, velocity: number): string {
+  const redHex = addLeadingZero(Math.round((radius / maxRadius) * 255).toString(16))
+  const greenHex = addLeadingZero(Math.round((height / maxHeight) * 255).toString(16))
+  const blueHex = addLeadingZero(Math.round(Math.abs(velocity) * 255).toString(16))
 
   return `#${redHex}${greenHex}${blueHex}`;
 }
 
 export interface Fish extends Updatable, Drawable {
   id: number,
+  color: string,
 }
 
 export function newFish(game: Game, id: number): Fish {
@@ -25,10 +34,10 @@ export function newFish(game: Game, id: number): Fish {
     x: Math.round(velocity > 0 ? 0 - radius : game.dimensions.width + radius),
     y: Math.round(Math.random() * 500 + 100),
   }
-  const color = getColor(radius, maxRadius, position.y, game.dimensions.height, velocity)
 
   const fish = {
     id: id,
+    color: getColor(radius, maxRadius, position.y, game.dimensions.height, velocity),
     update: (clock: Clock, game: Game) => {
       position = {
         x: position.x + (clock.time() / 2500) * velocity,
@@ -44,7 +53,7 @@ export function newFish(game: Game, id: number): Fish {
     },
 
     draw: (ctx: CanvasRenderingContext2D) => {
-      ctx.fillStyle = color
+      ctx.fillStyle = fish.color
       ctx.beginPath()
       ctx.arc(position.x, position.y, radius, 0, Math.PI * 2)
       ctx.fill()

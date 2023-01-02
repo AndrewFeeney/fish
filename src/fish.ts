@@ -24,30 +24,34 @@ export function getColor(radius: number, maxRadius: number, height: number, maxH
 export interface Fish extends Updatable, Drawable {
   id: number,
   color: string,
+  radius: number,
+  position: BoardCoordinates,
 }
 
 export function newFish(game: Game, id: number): Fish {
   const maxRadius = 50
   const radius = Math.round(Math.random() * maxRadius)
   const velocity = Math.random() + Math.random() - 1
-  let position: BoardCoordinates = {
+  const initialPosition: BoardCoordinates = {
     x: Math.round(velocity > 0 ? 0 - radius : game.dimensions.width + radius),
     y: Math.round(Math.random() * 500 + 100),
   }
 
   const fish = {
     id: id,
-    color: getColor(radius, maxRadius, position.y, game.dimensions.height, velocity),
+    position: initialPosition,
+    radius: radius,
+    color: getColor(radius, maxRadius, initialPosition.y, game.dimensions.height, velocity),
     update: (clock: Clock, game: Game) => {
-      position = {
-        x: position.x + (clock.time() / 2500) * velocity,
-        y: position.y
+      fish.position = {
+        x: fish.position.x + (clock.time() / 2500) * velocity,
+        y: fish.position.y
       }
 
-      if (position.x < 0 - 2 * radius) {
+      if (fish.position.x < 0 - 2 * radius) {
         game.eventBus.emit(Event.FishOutOfBounds, fish)
       }
-      if (position.x > game.dimensions.width + 2 * radius) {
+      if (fish.position.x > game.dimensions.width + 2 * radius) {
         game.eventBus.emit(Event.FishOutOfBounds, fish)
       }
     },
@@ -55,7 +59,7 @@ export function newFish(game: Game, id: number): Fish {
     draw: (ctx: CanvasRenderingContext2D) => {
       ctx.fillStyle = fish.color
       ctx.beginPath()
-      ctx.arc(position.x, position.y, radius, 0, Math.PI * 2)
+      ctx.arc(fish.position.x, fish.position.y, radius, 0, Math.PI * 2)
       ctx.fill()
       ctx.stroke()
     }

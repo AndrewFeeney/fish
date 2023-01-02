@@ -4,12 +4,15 @@ import Drawable from './drawable'
 import { drawLine } from './draw'
 import Game from './game'
 import Updatable from './updatable'
+import { Fish } from './fish'
+import { distanceBetween } from './geometry'
 
 export default class Rod implements Drawable, Updatable {
   anchorPoint: BoardCoordinates
   length: number = 100
   swingWidth: number = 50
   angle: number
+  attachedFish?: Fish
 
   constructor(initialAnchorPoint: BoardCoordinates = { x: 0, y: 0 }) {
     this.anchorPoint = initialAnchorPoint 
@@ -27,5 +30,16 @@ export default class Rod implements Drawable, Updatable {
   draw(ctx: CanvasRenderingContext2D, _game: Game) {
     drawLine(ctx, this.anchorPoint, this.tip())
   }
-}
 
+  hasCollidedWithFish(fish: Fish): boolean {
+    return distanceBetween(fish.position, this.tip()) <= fish.radius
+  }
+
+  attachFish(fish: Fish) {
+    this.attachedFish = fish 
+  }
+
+  hasFishAttached(): boolean {
+    return !!this.attachedFish
+  }
+}

@@ -26,6 +26,7 @@ export default class Game {
   players: Array<Player>
   fish: Array<Fish> = []
   ocean: Ocean
+  nextFishId: number
 
   constructor(ctx: CanvasRenderingContext2D, dimensions: Dimensions2D, clock: Clock, framesPerSecond: number) {
     this.ctx = ctx
@@ -33,6 +34,7 @@ export default class Game {
     this.clock = clock
     this.framesPerSecond = framesPerSecond
     this.eventBus = gameEventBus()
+    this.nextFishId = 0
 
     // Instantiate players
     this.players = [
@@ -44,7 +46,8 @@ export default class Game {
 
     // Instantiate fish
     for (let i = 0; i < 10; i++) {
-      this.fish.push(newFish(this, i))
+      this.fish.push(newFish(this, this.nextFishId))
+      this.nextFishId++
     }
 
     // Instantiate ocean
@@ -63,7 +66,18 @@ export default class Game {
   }
 
   private update() {
-    this.fish.forEach(fish => fish.update(this.clock, this))
+    this.fish.forEach(fish => {
+      fish.update(this.clock, this)
+      this.players.forEach((player) => {
+        if (player.rod.hasFishAttached()) {
+          return
+        }
+
+        if (player.rod.hasCollidedWithFish(fish)) {
+          this.attachFishToRod(fish, player.rod)
+        }
+      })
+    })
   }
 
   private render() {
@@ -77,6 +91,12 @@ export default class Game {
   }
 
   private respawnFish(fish: Fish) {
-    this.fish.splice(this.fish.findIndex(f => f.id === fish.id), 1, newFish(this, fish.id))
+    this.fish.splice(this.fish.findIndex(f => f.id === fish.id), 1, newFish(this, this.nextFishId))
+    this.nextFishId++
+  }
+
+  private attachFishToRod(fish: Fish, rod: Rod) {
+    this.respawnFish(fish)
+    rod.attachFish(fish)
   }
 }

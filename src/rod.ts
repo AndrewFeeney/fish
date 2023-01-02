@@ -24,7 +24,7 @@ export default class Rod implements Drawable, Updatable {
     return { x: this.anchorPoint.x, y: this.anchorPoint.y + this.length } 
   }
 
-  update(clock: Clock, game: Game) {
+  update(_clock: Clock, game: Game) {
     if (this.hasFishAttached()) {
       return
     }
@@ -43,15 +43,15 @@ export default class Rod implements Drawable, Updatable {
     drawLine(ctx, this.anchorPoint, this.tip())
   }
 
-  hasCollidedWithFish(fish: Fish): boolean {
-    return distanceBetween(fish.position, this.tip()) <= fish.radius
-  }
-
   attachFish(fish: Fish) {
     this.attachedFish = fish 
   }
 
-  hasFishAttached(): boolean {
+  private hasCollidedWithFish(fish: Fish): boolean {
+    return distanceBetween(fish.position, this.tip()) <= fish.radius
+  }
+
+  private hasFishAttached(): boolean {
     return !!this.attachedFish
   }
 }

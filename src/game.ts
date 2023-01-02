@@ -88,6 +88,7 @@ export default class Game {
 
   private attachFishToRod(fish: Fish, rod: Rod) {
     this.respawnFish(fish)
+    fish.position = rod.tip()
     rod.attachFish(fish)
   }
 }

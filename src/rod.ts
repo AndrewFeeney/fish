@@ -39,8 +39,11 @@ export default class Rod implements Drawable, Updatable {
     })
   }
 
-  draw(ctx: CanvasRenderingContext2D, _game: Game) {
+  draw(ctx: CanvasRenderingContext2D, game: Game) {
     drawLine(ctx, this.anchorPoint, this.tip())
+    if (this.attachedFish) {
+      this.attachedFish.draw(ctx, game)
+    }
   }
 
   attachFish(fish: Fish) {

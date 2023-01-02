@@ -1,5 +1,6 @@
 export enum Event {
   FishOutOfBounds = 'FishOutOfBounds',
+  FishCollidedWithRod = 'FishCollidedWithRod',
 }
 
 export interface EventBus {

@@ -2,6 +2,7 @@ import { BoardCoordinates } from './board-coordinates'
 import Clock from './clock'
 import Drawable from './drawable'
 import { drawLine } from './draw'
+import { Event } from './events'
 import Game from './game'
 import Updatable from './updatable'
 import { Fish } from './fish'
@@ -24,7 +25,18 @@ export default class Rod implements Drawable, Updatable {
   }
 
   update(clock: Clock, game: Game) {
+    if (this.hasFishAttached()) {
+      return
+    }
 
+    game.fish.forEach((fish) => {
+      if (this.hasCollidedWithFish(fish)) {
+        game.eventBus.emit(Event.FishCollidedWithRod, {
+          fish: fish,
+          rod: this,
+        })
+      }
+    })
   }
 
   draw(ctx: CanvasRenderingContext2D, _game: Game) {

@@ -66,18 +66,8 @@ export default class Game {
   }
 
   private update() {
-    this.fish.forEach(fish => {
-      fish.update(this.clock, this)
-      this.players.forEach((player) => {
-        if (player.rod.hasFishAttached()) {
-          return
-        }
-
-        if (player.rod.hasCollidedWithFish(fish)) {
-          this.attachFishToRod(fish, player.rod)
-        }
-      })
-    })
+    this.fish.forEach(fish => fish.update(this.clock, this))
+    this.players.forEach((player) => player.rod.update(this.clock, this))
   }
 
   private render() {
@@ -88,6 +78,7 @@ export default class Game {
 
   private registerEventHandlers() {
     this.eventBus.on(Event.FishOutOfBounds, (fish: Fish) => this.respawnFish(fish))
+    this.eventBus.on(Event.FishCollidedWithRod, (payload: any) => this.attachFishToRod(payload.fish, payload.rod))
   }
 
   private respawnFish(fish: Fish) {

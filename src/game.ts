@@ -1,28 +1,26 @@
 import { BoardCoordinates } from './board-coordinates'
 import Clock from './clock'
-import { Dimensions2D } from './dimensions-2d'
 import { gameEventBus, EventBus, Event} from './events'
 import { newFish, Fish } from './fish'
+import GameClock from './game-clock'
+import { GameConfig } from './game-config'
 import Ocean from './ocean'
 import Rod from './rod'
 
 class Player {
   rod: Rod
-  initialAnchorPoint: BoardCoordinates
+  initialRodPosition: BoardCoordinates
 
-  constructor(initialAnchorPoint: BoardCoordinates) {
-    this.initialAnchorPoint = initialAnchorPoint
-    this.rod = new Rod(this.initialAnchorPoint)
+  constructor(initialRodPosition: BoardCoordinates, game: Game) {
+    this.initialRodPosition = initialRodPosition
+    this.rod = new Rod(this.initialRodPosition, game)
   }
 }
 
 export default class Game {
   ctx: CanvasRenderingContext2D
-  dimensions: Dimensions2D
-  skyHeight: number = 100
-  oceanDepth: number
+  gameConfig: GameConfig
   clock: Clock
-  framesPerSecond: number
   eventBus: EventBus
 
   players: Array<Player>
@@ -30,21 +28,19 @@ export default class Game {
   ocean: Ocean
   nextFishId: number
 
-  constructor(ctx: CanvasRenderingContext2D, dimensions: Dimensions2D, clock: Clock, framesPerSecond: number) {
+  constructor(ctx: CanvasRenderingContext2D, gameConfig: GameConfig) {
     this.ctx = ctx
-    this.dimensions = dimensions
-    this.oceanDepth = dimensions.height - this.skyHeight
-    this.clock = clock
-    this.framesPerSecond = framesPerSecond
+    this.gameConfig = gameConfig
+    this.clock = new GameClock()
     this.eventBus = gameEventBus()
     this.nextFishId = 0
 
     // Instantiate players
     this.players = [
       new Player({
-        x: dimensions.width / 2,
-        y: 25,
-      }),
+        x: this.gameConfig.boardDimensions.width / 2,
+        y: this.gameConfig.boardDimensions.height - this.gameConfig.oceanDepth - this.gameConfig.rodTipHeightAboveWater,
+      }, this),
     ]
 
     // Instantiate fish
@@ -65,7 +61,7 @@ export default class Game {
       this.render()
     }
 
-    window.setInterval(loop, 1000 / this.framesPerSecond)
+    window.setInterval(loop, 1000 / this.gameConfig.framesPerSecond)
   }
 
   private update() {

@@ -33,15 +33,15 @@ export function newFish(game: Game, id: number): Fish {
   const radius = Math.round(Math.random() * maxRadius)
   const velocity = Math.random() + Math.random() - 1
   const initialPosition: BoardCoordinates = {
-    x: Math.round(velocity > 0 ? 0 - radius : game.dimensions.width + radius),
-    y: Math.round(Math.random() * game.oceanDepth + game.skyHeight + radius),
+    x: Math.round(velocity > 0 ? 0 - radius : game.gameConfig.boardDimensions.width + radius),
+    y: Math.round(Math.random() * game.gameConfig.oceanDepth + game.gameConfig.boardDimensions.height - game.gameConfig.oceanDepth + radius),
   }
 
   const fish = {
     id: id,
     position: initialPosition,
     radius: radius,
-    color: getColor(radius, maxRadius, initialPosition.y, game.dimensions.height, velocity),
+    color: getColor(radius, maxRadius, initialPosition.y, game.gameConfig.boardDimensions.height, velocity),
     update: (clock: Clock, game: Game) => {
       fish.position = {
         x: fish.position.x + (clock.time() / 2500) * velocity,
@@ -51,7 +51,7 @@ export function newFish(game: Game, id: number): Fish {
       if (fish.position.x < 0 - 2 * radius) {
         game.eventBus.emit(Event.FishOutOfBounds, fish)
       }
-      if (fish.position.x > game.dimensions.width + 2 * radius) {
+      if (fish.position.x > game.gameConfig.boardDimensions.width + 2 * radius) {
         game.eventBus.emit(Event.FishOutOfBounds, fish)
       }
     },

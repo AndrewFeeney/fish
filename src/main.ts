@@ -2,6 +2,7 @@ import './style.css'
 import Game from './game'
 import GameClock from './game-clock'
 import { Dimensions2D } from './dimensions-2d'
+import {newGameConfig} from './game-config'
 
 const boardDimensions: Dimensions2D = {
   width: 1080,
@@ -18,8 +19,7 @@ element.innerHTML = `
 `
 const canvas = document.getElementById('game-board') as HTMLCanvasElement
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-const clock = new GameClock()
-
-const game = new Game(ctx, boardDimensions, clock, 60)
+const gameConfig = newGameConfig()
+const game = new Game(ctx, gameConfig)
 
 game.start()

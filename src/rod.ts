@@ -10,13 +10,13 @@ import { distanceBetween } from './geometry'
 
 export default class Rod implements Drawable, Updatable {
   tipPosition: BoardCoordinates
-  length: number = 100
-  swingWidth: number = 50
+  length: number
   angle: number
   attachedFish?: Fish
 
-  constructor(initialTipPosition: BoardCoordinates = { x: 0, y: 0 }) {
+  constructor(initialTipPosition: BoardCoordinates = { x: 0, y: 0 }, game: Game) {
     this.tipPosition = initialTipPosition 
+    this.length = game.gameConfig.rodInitialLineLength
     this.angle = 90
   }
 

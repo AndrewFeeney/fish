@@ -9,19 +9,19 @@ import { Fish } from './fish'
 import { distanceBetween } from './geometry'
 
 export default class Rod implements Drawable, Updatable {
-  anchorPoint: BoardCoordinates
+  tipPosition: BoardCoordinates
   length: number = 100
   swingWidth: number = 50
   angle: number
   attachedFish?: Fish
 
-  constructor(initialAnchorPoint: BoardCoordinates = { x: 0, y: 0 }) {
-    this.anchorPoint = initialAnchorPoint 
+  constructor(initialTipPosition: BoardCoordinates = { x: 0, y: 0 }) {
+    this.tipPosition = initialTipPosition 
     this.angle = 90
   }
 
-  tip(): BoardCoordinates {
-    return { x: this.anchorPoint.x, y: this.anchorPoint.y + this.length } 
+  hookPosition(): BoardCoordinates {
+    return { x: this.tipPosition.x, y: this.tipPosition.y + this.length }
   }
 
   update(_clock: Clock, game: Game) {
@@ -40,7 +40,7 @@ export default class Rod implements Drawable, Updatable {
   }
 
   draw(ctx: CanvasRenderingContext2D, game: Game) {
-    drawLine(ctx, this.anchorPoint, this.tip())
+    drawLine(ctx, this.tipPosition, this.hookPosition())
     if (this.attachedFish) {
       this.attachedFish.draw(ctx, game)
     }
@@ -51,7 +51,7 @@ export default class Rod implements Drawable, Updatable {
   }
 
   private hasCollidedWithFish(fish: Fish): boolean {
-    return distanceBetween(fish.position, this.tip()) <= fish.radius
+    return distanceBetween(fish.position, this.hookPosition()) <= fish.radius
   }
 
   private hasFishAttached(): boolean {

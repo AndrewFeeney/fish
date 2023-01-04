@@ -15,6 +15,10 @@ class Player {
     this.initialRodPosition = initialRodPosition
     this.rod = new Rod(this.initialRodPosition, game)
   }
+
+  startLettingOutLine() {
+    this.rod.startLettingOutLine()
+  }
 }
 
 export default class Game {
@@ -78,6 +82,21 @@ export default class Game {
   private registerEventHandlers() {
     this.eventBus.on(Event.FishOutOfBounds, (fish: Fish) => this.respawnFish(fish))
     this.eventBus.on(Event.FishCollidedWithRod, (payload: any) => this.attachFishToRod(payload.fish, payload.rod))
+    this.eventBus.on(Event.LineLetOutStart, (player: Player) => player.startLettingOutLine())
+
+    window.addEventListener('keydown', (event) => {
+      if (event.defaultPrevented) {
+        return; // Do nothing if the event was already processed
+      }
+
+      switch (event.key) {
+        case " ":
+          this.eventBus.emit(Event.LineLetOutStart, this.players[0])
+          break
+        default:
+          return
+      }
+    })
   }
 
   private respawnFish(fish: Fish) {

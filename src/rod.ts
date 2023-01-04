@@ -13,6 +13,7 @@ export default class Rod implements Drawable, Updatable {
   length: number
   angle: number
   attachedFish?: Fish
+  lineLengthRateOfChange: number = 0
 
   constructor(initialTipPosition: BoardCoordinates = { x: 0, y: 0 }, game: Game) {
     this.tipPosition = initialTipPosition 
@@ -27,6 +28,18 @@ export default class Rod implements Drawable, Updatable {
   update(_clock: Clock, game: Game) {
     if (this.hasFishAttached()) {
       return
+    }
+
+    const minLineLength = game.gameConfig.rodInitialLineLength
+    const maxLineLength = game.gameConfig.oceanDepth + game.gameConfig.rodTipHeightAboveWater
+    this.length = Math.min(maxLineLength, Math.max(this.length + this.lineLengthRateOfChange, minLineLength))
+
+    if (this.length === maxLineLength) {
+      this.startReelingInLine()
+    }
+
+    if (this.length === minLineLength) {
+      this.lineLengthRateOfChange = 0
     }
 
     game.fish.forEach((fish) => {
@@ -48,6 +61,14 @@ export default class Rod implements Drawable, Updatable {
 
   attachFish(fish: Fish) {
     this.attachedFish = fish 
+  }
+
+  startLettingOutLine() {
+    this.lineLengthRateOfChange = 1
+  }
+
+  startReelingInLine() {
+    this.lineLengthRateOfChange = -1
   }
 
   private hasCollidedWithFish(fish: Fish): boolean {

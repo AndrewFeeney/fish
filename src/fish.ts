@@ -34,7 +34,7 @@ export function newFish(game: Game, id: number): Fish {
   const velocity = Math.random() + Math.random() - 1
   const initialPosition: BoardCoordinates = {
     x: Math.round(velocity > 0 ? 0 - radius : game.dimensions.width + radius),
-    y: Math.round(Math.random() * 500 + 100),
+    y: Math.round(Math.random() * game.oceanDepth + game.skyHeight + radius),
   }
 
   const fish = {

@@ -19,6 +19,8 @@ class Player {
 export default class Game {
   ctx: CanvasRenderingContext2D
   dimensions: Dimensions2D
+  skyHeight: number = 100
+  oceanDepth: number
   clock: Clock
   framesPerSecond: number
   eventBus: EventBus
@@ -31,6 +33,7 @@ export default class Game {
   constructor(ctx: CanvasRenderingContext2D, dimensions: Dimensions2D, clock: Clock, framesPerSecond: number) {
     this.ctx = ctx
     this.dimensions = dimensions
+    this.oceanDepth = dimensions.height - this.skyHeight
     this.clock = clock
     this.framesPerSecond = framesPerSecond
     this.eventBus = gameEventBus()

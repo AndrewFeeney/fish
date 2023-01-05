@@ -32,12 +32,12 @@ export default class Game {
   ocean: Ocean
   nextFishId: number
 
-  constructor(ctx: CanvasRenderingContext2D, gameConfig: GameConfig) {
+  constructor(ctx: CanvasRenderingContext2D, gameConfig: GameConfig, clock: Clock, eventBus: EventBus) {
     this.ctx = ctx
     this.gameConfig = gameConfig
-    this.clock = new GameClock()
-    this.eventBus = gameEventBus()
     this.nextFishId = 0
+    this.clock = clock
+    this.eventBus = eventBus
 
     // Instantiate players
     this.players = [

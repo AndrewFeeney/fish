@@ -74,6 +74,7 @@ export default class Game {
   }
 
   private render() {
+    this.clearCanvas()
     this.ocean.draw(this.ctx, this)
     this.players.forEach(player => player.rod.draw(this.ctx, this))
     this.fish.forEach(fish => fish.draw(this.ctx, this))
@@ -108,5 +109,16 @@ export default class Game {
     this.respawnFish(fish)
     fish.position = rod.hookPosition()
     rod.attachFish(fish)
+    rod.startReelingInLine()
+  }
+
+  private clearCanvas() {
+    this.ctx.fillStyle = "#FFFFFF";
+    this.ctx.fillRect(
+      0,
+      0,
+      this.gameConfig.boardDimensions.width,
+      this.gameConfig.boardDimensions.height
+    );
   }
 }

@@ -7,7 +7,8 @@ export interface GameConfig {
   maxFishRadius: number
   oceanDepth: number
   rodTipHeightAboveWater: number
-  rodInitialLineLength: number
+  rodLineLengthInitial: number
+  rodLineLengthMinimum: number
 }
 
 export function newGameConfig(): GameConfig {
@@ -20,7 +21,8 @@ export function newGameConfig(): GameConfig {
     maxFish: 10,
     maxFishRadius: 50,
     oceanDepth: 520,
-    rodTipHeightAboveWater: 100,
-    rodInitialLineLength: 90,
+    rodTipHeightAboveWater: 150,
+    rodLineLengthInitial: 90,
+    rodLineLengthMinimum: 20, 
   }
 }

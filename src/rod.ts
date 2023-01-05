@@ -11,13 +11,16 @@ import { distanceBetween } from './geometry'
 export default class Rod implements Drawable, Updatable {
   tipPosition: BoardCoordinates
   length: number
+  maxLineSpeed: number
   angle: number
   attachedFish?: Fish
   lineLengthRateOfChange: number = 0
+  lastUpdateTime: number = 0
 
   constructor(initialTipPosition: BoardCoordinates = { x: 0, y: 0 }, game: Game) {
     this.tipPosition = initialTipPosition 
     this.length = game.gameConfig.rodLineLengthInitial
+    this.maxLineSpeed = game.gameConfig.rodLineLineSpeedMaximum
     this.angle = 90
   }
 
@@ -25,22 +28,29 @@ export default class Rod implements Drawable, Updatable {
     return { x: this.tipPosition.x, y: this.tipPosition.y + this.length }
   }
 
-  update(_clock: Clock, game: Game) {
+  update(clock: Clock, game: Game) {
+    const updateTime = clock.time()
+    const millisecondsSinceLastUpdate = updateTime - this.lastUpdateTime
+    this.lastUpdateTime = updateTime
     const minLineLength = game.gameConfig.rodLineLengthMinimum + (this.attachedFish ? this.attachedFish.radius : 0)
     const maxLineLength = game.gameConfig.oceanDepth + game.gameConfig.rodTipHeightAboveWater
+    const changeInLineLength = this.lineLengthRateOfChange * millisecondsSinceLastUpdate
 
-    this.length = Math.min(maxLineLength, Math.max(this.length + this.lineLengthRateOfChange, minLineLength))
+    this.length = Math.min(maxLineLength, Math.max(this.length + changeInLineLength, minLineLength))
 
-    if (this.length === maxLineLength) {
+    if (this.attachedFish) {
+      this.attachedFish.position = this.hookPosition()
+    }
+
+    if (this.length >= maxLineLength) {
       this.startReelingInLine()
     }
 
-    if (this.length === minLineLength) {
+    if (this.length <= minLineLength) {
       this.lineLengthRateOfChange = 0
     }
 
     if (this.attachedFish) {
-      this.attachedFish.position = this.hookPosition()
       return
     }
 
@@ -66,11 +76,11 @@ export default class Rod implements Drawable, Updatable {
   }
 
   startLettingOutLine() {
-    this.lineLengthRateOfChange = 1
+    this.lineLengthRateOfChange = this.maxLineSpeed
   }
 
   startReelingInLine() {
-    this.lineLengthRateOfChange = -1
+    this.lineLengthRateOfChange = 0 - this.maxLineSpeed
   }
 
   private hasCollidedWithFish(fish: Fish): boolean {

@@ -9,6 +9,7 @@ export interface GameConfig {
   rodTipHeightAboveWater: number
   rodLineLengthInitial: number
   rodLineLengthMinimum: number
+  rodLineLineSpeedMaximum: number,
 }
 
 export function newGameConfig(): GameConfig {
@@ -24,5 +25,6 @@ export function newGameConfig(): GameConfig {
     rodTipHeightAboveWater: 150,
     rodLineLengthInitial: 90,
     rodLineLengthMinimum: 20, 
+    rodLineLineSpeedMaximum: 0.25,
   }
 }

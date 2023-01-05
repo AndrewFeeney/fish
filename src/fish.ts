@@ -31,7 +31,7 @@ export interface Fish extends Updatable, Drawable {
 export function newFish(game: Game, id: number): Fish {
   const maxRadius = 50
   const radius = Math.round(Math.random() * maxRadius)
-  const velocity = Math.random() + Math.random() - 1
+  const velocity = (Math.random() + Math.random() - 1) / 4
   const initialPosition: BoardCoordinates = {
     x: Math.round(velocity > 0 ? 0 - radius : game.gameConfig.boardDimensions.width + radius),
     y: Math.round(Math.random() * game.gameConfig.oceanDepth + game.gameConfig.boardDimensions.height - game.gameConfig.oceanDepth + radius),

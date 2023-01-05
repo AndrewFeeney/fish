@@ -26,7 +26,7 @@ export default class Rod implements Drawable, Updatable {
   }
 
   update(_clock: Clock, game: Game) {
-    const minLineLength = game.gameConfig.rodLineLengthMinimum
+    const minLineLength = game.gameConfig.rodLineLengthMinimum + (this.attachedFish ? this.attachedFish.radius : 0)
     const maxLineLength = game.gameConfig.oceanDepth + game.gameConfig.rodTipHeightAboveWater
 
     this.length = Math.min(maxLineLength, Math.max(this.length + this.lineLengthRateOfChange, minLineLength))

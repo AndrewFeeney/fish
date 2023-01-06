@@ -1,25 +1,9 @@
-import { BoardCoordinates } from './board-coordinates'
 import Clock from './clock'
-import { gameEventBus, EventBus, Event} from './events'
+import { EventBus, Event} from './events'
 import { newFish, Fish } from './fish'
-import GameClock from './game-clock'
 import { GameConfig } from './game-config'
 import Ocean from './ocean'
-import Rod from './rod'
-
-class Player {
-  rod: Rod
-  initialRodPosition: BoardCoordinates
-
-  constructor(initialRodPosition: BoardCoordinates, game: Game) {
-    this.initialRodPosition = initialRodPosition
-    this.rod = new Rod(this.initialRodPosition, game)
-  }
-
-  startLettingOutLine() {
-    this.rod.startLettingOutLine()
-  }
-}
+import Player from './player'
 
 export default class Game {
   ctx: CanvasRenderingContext2D
@@ -70,13 +54,13 @@ export default class Game {
 
   private update() {
     this.fish.forEach(fish => fish.update(this.clock, this))
-    this.players.forEach((player) => player.rod.update(this.clock, this))
+    this.players.forEach((player) => player.update(this.clock, this))
   }
 
   private render() {
     this.clearCanvas()
     this.ocean.draw(this.ctx, this)
-    this.players.forEach(player => player.rod.draw(this.ctx, this))
+    this.players.forEach(player => player.draw(this.ctx, this))
     this.fish.forEach(fish => fish.draw(this.ctx, this))
   }
 
@@ -105,11 +89,11 @@ export default class Game {
     this.nextFishId++
   }
 
-  private attachFishToRod(fish: Fish, rod: Rod) {
+  private attachFishToRod(fish: Fish, player: Player) {
     this.respawnFish(fish)
-    fish.position = rod.hookPosition()
-    rod.attachFish(fish)
-    rod.startReelingInLine()
+    fish.position = player.hookPosition()
+    player.attachFish(fish)
+    player.startReelingInLine()
   }
 
   private clearCanvas() {

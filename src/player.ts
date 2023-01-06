@@ -8,7 +8,7 @@ import Updatable from './updatable'
 import { Fish } from './fish'
 import { distanceBetween } from './geometry'
 
-export default class Rod implements Drawable, Updatable {
+export default class Player implements Drawable, Updatable {
   tipPosition: BoardCoordinates
   length: number
   maxLineSpeed: number
@@ -48,6 +48,12 @@ export default class Rod implements Drawable, Updatable {
 
     if (this.length <= minLineLength) {
       this.lineLengthRateOfChange = 0
+      if (this.attachedFish) {
+        game.eventBus.emit(Event.FishReeledInByPlayer, {
+          fish: this.attachedFish,
+          player: this
+        })
+      }
     }
 
     if (this.attachedFish) {

@@ -1,7 +1,10 @@
 export enum Event {
-  FishOutOfBounds = 'FishOutOfBounds',
   FishCollidedWithRod = 'FishCollidedWithRod',
+  FishOutOfBounds = 'FishOutOfBounds',
+  FishReeledInByPlayer = 'FishReeledInByPlayer',
   LineLetOutStart = 'LineLetOutStart',
+  PlayerScoreIncremented = 'PlayerScoreIncremented',
+  PlayerScoreUpdated = 'PlayerScoreUpdated',
 }
 
 export interface EventBus {

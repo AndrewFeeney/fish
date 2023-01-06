@@ -26,6 +26,7 @@ export interface Fish extends Updatable, Drawable {
   color: string,
   radius: number,
   position: BoardCoordinates,
+  pointsValue: () => number,
 }
 
 export function newFish(game: Game, id: number): Fish {
@@ -42,6 +43,7 @@ export function newFish(game: Game, id: number): Fish {
     position: initialPosition,
     radius: radius,
     color: getColor(radius, maxRadius, initialPosition.y, game.gameConfig.boardDimensions.height, velocity),
+    pointsValue: () => 100,
     update: (clock: Clock, game: Game) => {
       fish.position = {
         x: fish.position.x + (clock.time() / 2500) * velocity,

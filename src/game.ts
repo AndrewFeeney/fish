@@ -68,6 +68,15 @@ export default class Game {
     this.eventBus.on(Event.FishOutOfBounds, (fish: Fish) => this.respawnFish(fish))
     this.eventBus.on(Event.FishCollidedWithRod, (payload: any) => this.attachFishToRod(payload.fish, payload.rod))
     this.eventBus.on(Event.LineLetOutStart, (player: Player) => player.startLettingOutLine())
+    this.eventBus.on(
+      Event.FishReeledInByPlayer,
+      (payload: { fish: Fish, player: Player }) => {
+        this.eventBus.emit(Event.PlayerScoreIncremented, {
+          player: payload.player,
+          score: payload.fish.pointsValue(),
+        })
+      }
+    )
 
     window.addEventListener('keydown', (event) => {
       if (event.defaultPrevented) {

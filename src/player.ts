@@ -13,15 +13,25 @@ export default class Player implements Drawable, Updatable {
   length: number
   maxLineSpeed: number
   angle: number
+  score: number = 0
   attachedFish?: Fish
   lineLengthRateOfChange: number = 0
   lastUpdateTime: number = 0
+  game: Game
 
   constructor(initialTipPosition: BoardCoordinates = { x: 0, y: 0 }, game: Game) {
     this.tipPosition = initialTipPosition 
     this.length = game.gameConfig.rodLineLengthInitial
     this.maxLineSpeed = game.gameConfig.rodLineLineSpeedMaximum
     this.angle = 90
+    this.game = game
+  }
+
+  boot() {
+    this.game.eventBus.on(
+      Event.PlayerScoreIncremented,
+      (payload: { player: Player, score: number }) => this.incrementScore(payload.score)
+    )
   }
 
   hookPosition(): BoardCoordinates {
@@ -53,6 +63,7 @@ export default class Player implements Drawable, Updatable {
           fish: this.attachedFish,
           player: this
         })
+        this.attachedFish = undefined
       }
     }
 
@@ -87,6 +98,15 @@ export default class Player implements Drawable, Updatable {
 
   startReelingInLine() {
     this.lineLengthRateOfChange = 0 - this.maxLineSpeed
+  }
+
+  private incrementScore(score: number) {
+    this.score = this.score + score
+    this.game.eventBus.emit(Event.PlayerScoreUpdated, {
+      player: this,
+      score: this.score,
+      change: score
+    })
   }
 
   private hasCollidedWithFish(fish: Fish): boolean {

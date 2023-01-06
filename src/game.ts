@@ -42,7 +42,8 @@ export default class Game {
   }
 
   start() {
-    this.registerEventHandlers()
+    this.boot()
+    this.players.forEach((p) => p.boot())
 
     const loop = () => {
       this.update()
@@ -64,7 +65,7 @@ export default class Game {
     this.fish.forEach(fish => fish.draw(this.ctx, this))
   }
 
-  private registerEventHandlers() {
+  private boot() {
     this.eventBus.on(Event.FishOutOfBounds, (fish: Fish) => this.respawnFish(fish))
     this.eventBus.on(Event.FishCollidedWithRod, (payload: any) => this.attachFishToRod(payload.fish, payload.rod))
     this.eventBus.on(Event.LineLetOutStart, (player: Player) => player.startLettingOutLine())
